@@ -1,3 +1,7 @@
-const express = require("express")
+import express from "express"
 const app = express();
-console.log("HELLLLO")
+const port = 8088;
+app.listen(port,()=>console.log(`Listening http://localhost:${port}`))
+app.get("/",(rq,rp)=>{
+    console.log(rq)
+})
