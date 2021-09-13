@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/gitbeginer/wetube/issues"
   },
-  "homepage": "https://github.com/gitbeginer/wetube#readme"
+  "homepage": "https://github.com/gitbeginer/wetube#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
