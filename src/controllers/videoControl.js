@@ -34,11 +34,14 @@ export const watch = (req, res) =>{
     const video = videos[id - 1];
     return res.render("watch", { pageTitle: `Watching ${video.title}` , video });
 };
-export const see = (req, res) => res.send("see");
-export const edit = (req, res) =>{
+export const getEdit = (req, res) =>{
     const { id } = req.params;
     const video = videos[id - 1];
- res.render("edit",  { pageTitle: `Watching ${video.title}` ,video });
+ res.render("edit",  { pageTitle: `${video.title}` ,video });
+};
+export const postEdit = (req,res) => {
+    videos[req.params.id-1].title = req.body.title;
+    return res.redirect(`/videos/${req.params.id}`);
 };
 export const search = (req, res) => res.send("Search");
 export const upload = (req, res) => res.send("Upload");
