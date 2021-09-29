@@ -1,6 +1,6 @@
 import express from "express"
-import {trending} from "../controllers/videoControl.js"
+import {home} from "../controllers/videoControl.js"
 const globalRouter = express.Router();
-globalRouter.get("/",trending)
+globalRouter.get("/",home)
 
 export default globalRouter;
