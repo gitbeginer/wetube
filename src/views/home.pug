@@ -2,6 +2,7 @@ extends base
 include mixins/video
 block content 
     h1 welcoem here you will see trending videos
+    a(href=`/videos/upload`) upload &rarr;
 
     each potato in videos
         +video(potato)
