@@ -1,6 +1,6 @@
 import express from "express"
-import { edit } from "../controllers/videoControl";
+import { getEdit } from "../controllers/videoControl";
 const userRouter = express.Router();
-userRouter.get("/edit", edit)
+userRouter.get("/edit", getEdit)
 
 export default userRouter;
