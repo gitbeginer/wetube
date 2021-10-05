@@ -1,6 +1,9 @@
 import express from "express"
-import { getEdit } from "../controllers/videoControl";
+import { startGithubLogin, finishGithubLogin,  getEdit,
+    postEdit, } from "../controllers/userController";
 const userRouter = express.Router();
-userRouter.get("/edit", getEdit)
+userRouter.get("/github/start", startGithubLogin);
+userRouter.get("/github/finish", finishGithubLogin);
+userRouter.route("/edit").get(getEdit).post(postEdit);
 
 export default userRouter;

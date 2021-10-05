@@ -25,3 +25,5 @@ no.3 does not hunt.
 
 output
 For everyone to coexist, fish tanks needed at least = 2
+
+C:\Program Files\MongoDB\Server\5.0\bin
