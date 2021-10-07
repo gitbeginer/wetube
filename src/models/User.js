@@ -12,10 +12,14 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", async function () {
-  this.password = await bcrypt.hash(this.password, 5);
-  console.log(this.password);
+  if(this.isModified("password")){
+    this.password = await bcrypt.hash(this.password, 5);
+  }
+  //console.log(this.password);
 });
-
+userSchema.post('findOneAndUpdate', function(doc) {
+  //console.log("sdf", this,doc);
+});
 
 const User = mongoose.model("User", userSchema);
 export default User;

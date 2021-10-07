@@ -1,10 +1,11 @@
 import User from "../models/User";
+import Video from "../models/Video";
 import bcrypt from "bcrypt";
-import fetch  from "node-fetch"
+import fetch from "node-fetch"
 export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
 export const postJoin = async (req, res) => {
-  
-  const { name , username, email, password, password2, location} = req.body;
+
+  const { name, username, email, password, password2, location } = req.body;
   const pageTitle = "Join";
   if (password !== password2) {
     return res.status(400).render("join", {
@@ -35,15 +36,13 @@ export const postJoin = async (req, res) => {
     });
   }
 };
-
-export const getLogin = (req, res) =>{
+export const getLogin = (req, res) => {
   res.render("login", { pageTitle: "Login" });
-}
-
+};
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
   const pageTitle = "Login";
-  const user = await User.findOne({ username , socialOnly: false});
+  const user = await User.findOne({ username, socialOnly: false });
   if (!user) {
     return res.status(400).render("login", {
       pageTitle,
@@ -63,7 +62,6 @@ export const postLogin = async (req, res) => {
 
   return res.redirect("/");
 };
-
 //https://github.com/settings/applications 세팅먼저할것
 export const startGithubLogin = (req, res) => {
   const baseUrl = "https://github.com/login/oauth/authorize";
@@ -76,7 +74,6 @@ export const startGithubLogin = (req, res) => {
   const finalUrl = `${baseUrl}?${params}`;
   return res.redirect(finalUrl);
 };
-
 export const finishGithubLogin = async (req, res) => {
   const baseUrl = "https://github.com/login/oauth/access_token";
   const config = {
@@ -94,7 +91,7 @@ export const finishGithubLogin = async (req, res) => {
       },
     })
   ).json();
-  
+
   if ("access_token" in tokenRequest) {
     const { access_token } = tokenRequest;
     const apiUrl = "https://api.github.com";
@@ -105,9 +102,9 @@ export const finishGithubLogin = async (req, res) => {
         },
       })
     ).json();
-    
+
     //console.log(userData)
-    
+
     const emailData = await (
       await fetch(`${apiUrl}/user/emails`, {
         headers: {
@@ -115,7 +112,7 @@ export const finishGithubLogin = async (req, res) => {
         },
       })
     ).json();
-    
+
 
     const emailObj = emailData.find(
       (email) => email.primary === true && email.verified === true
@@ -126,7 +123,7 @@ export const finishGithubLogin = async (req, res) => {
     let user = await User.findOne({ email: emailObj.email });
 
     if (!user) {
-        user = await User.create({
+      user = await User.create({
         avatarUrl: userData.avatar_url,
         name: userData.name ? userData.name : userData.login,
         username: userData.login,
@@ -144,17 +141,78 @@ export const finishGithubLogin = async (req, res) => {
     return res.redirect("/login");
   }
 };
-
 export const getEdit = (req, res) => {
   return res.render("edit-profile", { pageTitle: "Edit Profile" });
 };
-export const postEdit = (req, res) => {
-  return res.render("edit-profile");
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id, avatarUrl },
+    },
+    body: { name, email, username, location },
+    file,
+  } = req;
+
+  const updatedUser = await User.findByIdAndUpdate(_id, {
+    avatarUrl: file ? "/"+file.path : avatarUrl,
+    name,
+    email,
+    username,
+    location,
+  }, { new: true });
+
+  console.log("update", updatedUser);
+
+  req.session.user = updatedUser;
+  return res.redirect("/users/edit");
 };
+export const remove = (req, res) => res.send("Remove User");
 
-
-export const remove = (req, res) => res.send("Remove User");    
-export const logout= (req, res) =>{
+export const logout = (req, res) => {
   req.session.destroy();
   return res.redirect("/");
-} 
+}
+export const getChangePassword = (req, res) => {
+  if (req.session.user.socialOnly === true) {
+    return res.redirect("/");
+  }
+  return res.render("users/change-password", { pageTitle: "Change Password" });
+};
+export const postChangePassword = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { oldPassword, newPassword, newPasswordConfirmation },
+  } = req;
+  const user = await User.findById(_id);
+  const ok = await bcrypt.compare(oldPassword, user.password);
+  if (!ok) {
+    return res.status(400).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The current password is incorrect",
+    });
+  }
+  if (newPassword !== newPasswordConfirmation) {
+    return res.status(400).render("users/change-password", {
+      pageTitle: "Change Password",
+      errorMessage: "The password does not match the confirmation",
+    });
+  }
+  user.password = newPassword;
+  await user.save();
+  return res.redirect("/users/logout");
+};
+export const see = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(404).render("404", { pageTitle: "User not found." });
+  }
+  const videos = await Video.find({ owner: user._id });
+  return res.render("users/profile", {
+    pageTitle: user.name,
+    user,
+    videos,
+  });
+};

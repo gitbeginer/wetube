@@ -6,16 +6,18 @@ html(lang="ko")
         
     body 
         header
-            
-
             h1=pageTitle
             nav 
                 ul 
                     li
                         a(href=`/`) Home &rarr;
                     if session.loggedIn
+                        li 
+                            a(href=`/videos/upload`) upload &rarr;
                         li
-                            a(href="/logout")  log out
+                            a(href=`/users/${loggedInUser._id}`) My Profile
+                        li
+                            a(href="/users/logout")  log out
                         li 
                             a(href="/users/edit") Edit Profile
                     else
@@ -23,8 +25,7 @@ html(lang="ko")
                             a(href="/join")  Join
                         li
                             a(href="/login")  Login  
-                    li 
-                        a(href=`/videos/upload`) upload &rarr;
+                    
                     li 
                         a(href=`/search`) Search &rarr;
                     li
