@@ -4,8 +4,8 @@
   "description": "test",
   "main": "init.js",
   "scripts": {
-    "test": "nodemon --exec babel-node src/init.js",
-    "assets": "webpack --config webpack.config.js"
+    "test": "nodemon",
+    "assets": "webpack"
   },
   "repository": {
     "type": "git",
