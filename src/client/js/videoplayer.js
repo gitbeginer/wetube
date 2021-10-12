@@ -105,50 +105,52 @@ const handleVolumeChange = (event) => {
     volumeValue = value;
     video.volume = value;
 };
+const handleEnded = () => {
+    const { id } = videoContainer.dataset;
+    
+    fetch(`/api/videos/${id}/view`, {
+        method: "POST",
+    });
+};
 
+video.addEventListener("ended", handleEnded);
+video.addEventListener("pause", (e) => { playBtn.innerText = video.paused ? "Play" : "Pause"; });
+video.addEventListener("play", (e) => { playBtn.innerText = video.paused ? "Play" : "Pause"; });
+video.addEventListener("loadeddata", handleLoadedMetadata);
+video.addEventListener("timeupdate", handleTimeUpdate);
 muteBtn.addEventListener("click", handleMuteClick);
 playBtn.addEventListener("click", handlePlayClick);
 volumeRange.addEventListener("input", handleVolumeChange);
-video.addEventListener("pause", (e) => { playBtn.innerText = video.paused ? "Play" : "Pause"; });
-video.addEventListener("play", (e) => { playBtn.innerText = video.paused ? "Play" : "Pause"; });
-//video.addEventListener("loadedmetadata", handleLoadedMetadata);
-video.addEventListener("loadeddata", handleLoadedMetadata);
-video.addEventListener("timeupdate", handleTimeUpdate);
 timeline.addEventListener("input", handleTimelineChange);
 fullScreenBtn.addEventListener("click", handleFullscreen);
-// video.addEventListener("mousemove", handleMouseMove);
-// video.addEventListener("mouseleave", handleMouseLeave);
 videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
-
-
-videoContainer.addEventListener('keydown', (e)=>{    
-    switch(e.code){
-        case "KeyF":handleFullscreen();
-        break;
-        case "Space":handlePlayClick();
-        break;
-        case "ArrowDown": 
+videoContainer.addEventListener("click", handlePlayClick);
+videoContainer.addEventListener('keydown', (e) => {
+    switch (e.code) {
+        case "KeyF": handleFullscreen();
+            break;
+        case "Space": handlePlayClick();
+            break;
+        case "ArrowDown":
         case "ArrowUp":
-            volumeValue += Math.pow(-1,"ArrowDown"==e.code)/10;
-            volumeValue = Math.max(Math.min(1, volumeValue),0);
+            volumeValue += Math.pow(-1, "ArrowDown" == e.code) / 10;
+            volumeValue = Math.max(Math.min(1, volumeValue), 0);
             volumeRange.value = volumeValue;
             e.preventDefault();
             break;
         case "ArrowLeft":
         case "ArrowRight":
-            timeline.value = video.currentTime + Math.pow(-1,"ArrowLeft"==e.code)*5;
+            timeline.value = video.currentTime + Math.pow(-1, "ArrowLeft" == e.code) * 5;
             video.currentTime = timeline.value;
-        break;
+            break;
         case "KeyM":
             handleMuteClick();
-        break;
+            break;
     }
     handleMouseMove();
 });
 videoContainer.focus();
 
+if (video.readyState == 4) handleLoadedMetadata();
 
-if (video.readyState == 4) {
-    handleLoadedMetadata();
-}

@@ -6,10 +6,10 @@ import MongoStore from "connect-mongo";
 import rootRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
+import apiRouter from "./routers/apiRouter";
 import { localMiddleware } from "./middlewares";
 
 const app = express();
-
 
 app.set("view engine", "pug")
 app.set("views",process.cwd()+"/src/views");
@@ -34,6 +34,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
+app.use("/api", apiRouter);
 
 
 // function endrs(rq,rs,next){

@@ -1,7 +1,7 @@
 extends base.pug
 
 block content 
-    div(tabindex="-1")#videoContainer
+    div(tabindex="-1", data-id=video._id)#videoContainer
         video(src=video.fileUrl)
         div#videoControls.videoControls
             div.videoControls__play
@@ -30,7 +30,7 @@ block content
         a(href=`${video.id}/edit`) Edit Video &rarr;
         br
         a(href=`${video.id}/delete`) Delete Video &rarr;
-    
+        
 block scripts 
     script(src="/static/js/videoplayer.js")  
 
