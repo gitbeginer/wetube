@@ -121,6 +121,34 @@ fullScreenBtn.addEventListener("click", handleFullscreen);
 videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
 
+
+videoContainer.addEventListener('keydown', (e)=>{    
+    switch(e.code){
+        case "KeyF":handleFullscreen();
+        break;
+        case "Space":handlePlayClick();
+        break;
+        case "ArrowDown": 
+        case "ArrowUp":
+            volumeValue += Math.pow(-1,"ArrowDown"==e.code)/10;
+            volumeValue = Math.max(Math.min(1, volumeValue),0);
+            volumeRange.value = volumeValue;
+            e.preventDefault();
+            break;
+        case "ArrowLeft":
+        case "ArrowRight":
+            timeline.value = video.currentTime + Math.pow(-1,"ArrowLeft"==e.code)*5;
+            video.currentTime = timeline.value;
+        break;
+        case "KeyM":
+            handleMuteClick();
+        break;
+    }
+    handleMouseMove();
+});
+videoContainer.focus();
+
+
 if (video.readyState == 4) {
     handleLoadedMetadata();
 }

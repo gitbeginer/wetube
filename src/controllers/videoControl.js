@@ -68,3 +68,5 @@ export const postupload = async (req,res) =>{
         return res.render("upload", {pageTitle:"upload video", errmsg:error._message});
     }
 }
+
+
