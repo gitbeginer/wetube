@@ -1,11 +1,9 @@
 const path = require("path");
+const glob = require("glob");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-    entry: {
-      main: "./src/client/js/main.js",
-      videoPlayer: "./src/client/js/videoplayer.js",
-    },
+    entry: Object.fromEntries(glob.sync("./src/client/js/*.js").map(a=>[path.basename(a),a])),
     mode: "development",
     watch: true,
     plugins: [
@@ -14,7 +12,7 @@ module.exports = {
       }),
     ],
     output: {
-      filename: "js/[name].js",
+      filename: "js/[name]",
       path: path.resolve(__dirname, "assets"),
       clean: false,
     },

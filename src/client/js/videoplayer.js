@@ -107,7 +107,7 @@ const handleVolumeChange = (event) => {
 };
 const handleEnded = () => {
     const { id } = videoContainer.dataset;
-    
+    console.log("what am i doing here? ")
     fetch(`/api/videos/${id}/view`, {
         method: "POST",
     });
