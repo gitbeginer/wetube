@@ -52,17 +52,19 @@ export const deleteVideo = async (req, res) => {
     await Video.findByIdAndDelete(req.params.id);
     return res.redirect("/");
 }
-export const postupload = async (req, res) => {
+export const postUpload = async (req, res) => {
     const {
         user: { _id },
     } = req.session;
 
-    const { path: fileUrl } = req.file;
-    req.body.fileUrl = "/" + fileUrl;
+    const { video:videof, thumb } = req.files;
+    req.body.fileUrl = "/" + videof[0].path;
+    req.body.thumbUrl = "/" + thumb[0].destination+ thumb[0].filename;
     req.body.owner = _id;
     const video = new Video(req.body);
     try {
         const dbvideo = await video.save();
+        console.log(dbvideo);
         return res.redirect("/");
     } catch (error) {
         console.log(error);
