@@ -31,6 +31,9 @@ return res.send(`${req.session.id} ${req.session.potato}`);
 });
 app.use("/static", express.static("assets"));
 app.use("/uploads", express.static("uploads"));
+
+app.use("/node_modules",express.static("node_modules"));
+
 app.use("/", rootRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);

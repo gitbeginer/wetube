@@ -1,8 +1,16 @@
 import multer from "multer";
+import imageToBase64 from "image-to-base64";
 
-export const localMiddleware = (req, res, next) => {
+export const localMiddleware = async (req, res, next) => {
     console.log("sessionID", req.sessionID)
     res.locals.session = req.session;
+    // if(req.session.user){
+    //     const addres = req.session.user.avatarUrl;
+    //     if(addres && addres.startsWith("http")){
+    //         const rs = await imageToBase64(addres)
+    //         req.session.user.avatarUrl= "data:image/png;base64," + rs
+    //     }
+    // }
     res.locals.loggedInUser = req.session.user || {};
     res.locals.siteName = "WeTube"
     next();

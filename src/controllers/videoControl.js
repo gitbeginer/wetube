@@ -43,7 +43,11 @@ export const search = async (req, res) => {
     }
     res.render("Search", { pageTitle: "Search", videos });
 }
-export const upload = (req, res) => res.render("upload", { pageTitle: "Upload" });
+export const upload = (req, res) =>{
+     res.header("Cross-Origin-Embedder-Policy", "require-corp");
+     res.header("Cross-Origin-Opener-Policy", "same-origin");
+     res.render("upload", { pageTitle: "Upload" })
+};
 export const deleteVideo = async (req, res) => {
     await Video.findByIdAndDelete(req.params.id);
     return res.redirect("/");
