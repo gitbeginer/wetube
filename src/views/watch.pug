@@ -1,5 +1,5 @@
 extends base.pug
-
+include mixins/comment
 block content 
     div(tabindex="-1", data-id=video._id)#videoContainer
         video(src=video.fileUrl)
@@ -19,7 +19,7 @@ block content
             div
                 span#fullScreen
                     i.fas.fa-expand
-//-    
+   
     div 
         p=video.description
         small=video.createdAt
@@ -30,8 +30,20 @@ block content
         a(href=`${video.id}/edit`) Edit Video &rarr;
         br
         a(href=`${video.id}/delete`) Delete Video &rarr;
+    if loggedInUser._id
+        div 
+            textarea#txtcomment(cols="30", rows="3", minlength=2, data-name=loggedInUser.username) 
+            button#post post
+        hr
+    div#commentDiv
+        each comment in comments.reverse()
+            +comment(comment)
+
+
         
 block scripts 
     script(src="/static/js/videoplayer.js")  
+    if loggedInUser._id
+        script(src="/static/js/commentClient.js")  
 
     

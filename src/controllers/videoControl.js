@@ -1,5 +1,5 @@
 import Video from "../models/Video";
-import User from "../models/User";
+import Comment from "../models/Comment";
 
 export const home = async (req, res) => {
     try {
@@ -16,15 +16,22 @@ export const home = async (req, res) => {
 export const watch = async (req, res) => {
     const { id } = req.params;
     const video = await Video.findById(id).populate("owner");
-
     if (!video) return res.render("404", { pageTitle: "Video not Found" });
-    return res.render("watch", { pageTitle: video.title, video });
+    const comments = await Comment.find({videoID : id}).populate("ownerID");
+
+    return res.render("watch", { pageTitle: video.title, video, comments });
 };
 export const getEdit = async (req, res) => {
     const { id } = req.params;
     const video = await Video.findById(id);
 
     if (!video) return res.status(404).render("404", { pageTitle: "Video not Found" });
+
+    if (String(video.owner) !== String(req.session.user._id)) {
+        req.flash("error", "Not authorized");
+        return res.status(403).redirect("/");
+      }
+
     return res.render("edit", { pageTitle: `Edit ${video.title}`, video });
 };
 export const postEdit = async (req, res) => {
@@ -32,7 +39,13 @@ export const postEdit = async (req, res) => {
     const video = await Video.exists({ _id: id });
     if (!video) return res.status(404).render("404", { pageTitle: "Video not Found" });
 
+    if (String(video.owner) !== String(req.session.user._id)) {
+        req.flash("error", "You are not the the owner of the video.");
+        return res.status(403).redirect("/");
+      }
+
     await Video.findByIdAndUpdate(id, req.body);
+    req.flash("success", "Changes saved.");
     return res.redirect(`/videos/${req.params.id}`);
 };
 export const search = async (req, res) => {
