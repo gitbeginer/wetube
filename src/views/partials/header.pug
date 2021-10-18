@@ -5,10 +5,10 @@ header
         ul 
             li
                 a(href="/search")
-                    i.fas.fa-search        
+                    i.fas.fa-search      
+            li 
+                a(href=`/`) home &rarr;  
             if session.loggedIn
-                li 
-                    a(href=`/`) home &rarr;
                 li 
                     a(href=`/videos/upload`) upload &rarr;
                 li
