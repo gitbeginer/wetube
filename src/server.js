@@ -41,7 +41,6 @@ app.use("/videos", videoRouter);
 app.use("/users", userRouter);
 app.use("/api", apiRouter);
 
-
 // function endrs(rq,rs,next){
 //     return rs.send("404");
 // }
