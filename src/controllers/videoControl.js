@@ -71,8 +71,8 @@ export const postUpload = async (req, res) => {
     } = req.session;
 
     const { video:videof, thumb } = req.files;
-    req.body.fileUrl =  videof[0].location;
-    req.body.thumbUrl =  thumb[0].location;
+    req.body.fileUrl =  process.env.NODE_ENV ? videof[0].location : "/"+ videof[0].path;
+    req.body.thumbUrl = process.env.NODE_ENV ? thumb[0].location : "/" + thumb[0].path.replaceAll("\\","/");
     req.body.owner = _id;
     const video = new Video(req.body);
     try {

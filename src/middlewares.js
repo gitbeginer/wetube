@@ -9,10 +9,16 @@ const s3 = new aws.S3({
     }
 });
 
-const multerUploader = multerS3({
+const multerImage = multerS3({
     s3 : s3,
-    bucket : 'yeahtube',
+    bucket : 'yeahtube/images',
     acl:'public-read',
+})
+const multerVideo = multerS3({
+    s3 : s3,
+    bucket : 'yeahtube/videos',
+    acl:'public-read',
+    contentType: multerS3.AUTO_CONTENT_TYPE,
 })
 
 export const localMiddleware = async (req, res, next) => {
@@ -53,7 +59,7 @@ export const avatarUpload = multer({
     limits: {
       fileSize: 3000000,
     },
-    storage: multerUploader,
+    storage: process.env.NODE_ENV ? multerVideo : undefined,
   });
   
 
@@ -62,6 +68,6 @@ export const videoUpload = multer({
     limits: {
       fileSize: 100000000,
     },
-    storage: multerUploader,
+    storage: process.env.NODE_ENV ? multerVideo : undefined,
   });
   
