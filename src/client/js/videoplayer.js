@@ -31,11 +31,11 @@ const handleMouseMove = () => {
     }
 
     videoControls.classList.add("showing");
-    controlsMovementTimeout = setTimeout(hideControls, 3000);
+    controlsMovementTimeout = setTimeout(hideControls, 1000);
 };
 
 const handleMouseLeave = () => {
-    controlsTimeout = setTimeout(hideControls, 3000);
+    controlsTimeout = setTimeout(hideControls, 1000);
 };
 
 
@@ -83,6 +83,11 @@ const handlePlayClick = (e) => {
     playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
 };
 
+function handelVideoClick(e){
+    console.log(e.path[0].id,  e.path[0].id === 'play')
+    if(e.path[0].tagName =='VIDEO') handlePlayClick(e);
+}
+
 const handleMuteClick = (e) => {
     if (video.muted) {
         video.muted = false;
@@ -107,7 +112,6 @@ const handleVolumeChange = (event) => {
 };
 const handleEnded = () => {
     const { id } = videoContainer.dataset;
-    console.log("what am i doing here? ")
     fetch(`/api/videos/${id}/view`, {
         method: "POST",
     });
@@ -125,7 +129,7 @@ timeline.addEventListener("input", handleTimelineChange);
 fullScreenBtn.addEventListener("click", handleFullscreen);
 videoContainer.addEventListener("mousemove", handleMouseMove);
 videoContainer.addEventListener("mouseleave", handleMouseLeave);
-videoContainer.addEventListener("click", handlePlayClick);
+videoContainer.addEventListener("click", handelVideoClick);
 videoContainer.addEventListener('keydown', (e) => {
     switch (e.code) {
         case "KeyF": handleFullscreen();

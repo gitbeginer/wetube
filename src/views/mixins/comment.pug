@@ -3,3 +3,5 @@ mixin comment(comment)
         span=comment.ownerID.username
         span.comSpace   
         span=comment.text
+        if String(comment.ownerID._id) == String(loggedInUser._id)
+            span(class='delcom')='❌'
